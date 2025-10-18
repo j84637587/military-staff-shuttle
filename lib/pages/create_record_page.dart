@@ -351,6 +351,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
   // 快速分配模式
   String? _quickSelectStationId;
   RideType _quickSelectRideType = RideType.roundTrip;
+  bool _isQuickModeExpanded = true; // 快速分配區是否展開
 
   @override
   void initState() {
@@ -449,7 +450,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
             color: Colors.grey[100],
             child: Column(
               children: [
-                // 快速分配模式選擇區
+                // 快速分配模式選擇區（可收合）
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -460,154 +461,200 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.touch_app,
-                            color: Colors.orange[700],
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '快速分配模式',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange[900],
-                              fontSize: 14,
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            _isQuickModeExpanded = !_isQuickModeExpanded;
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.touch_app,
+                              color: Colors.orange[700],
+                              size: 20,
                             ),
-                          ),
-                          const Spacer(),
-                          if (_quickSelectStationId != null)
-                            TextButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  _quickSelectStationId = null;
-                                });
-                              },
-                              icon: const Icon(Icons.clear, size: 16),
-                              label: const Text('清除'),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.orange[700],
+                            const SizedBox(width: 8),
+                            Text(
+                              '快速分配模式',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange[900],
+                                fontSize: 14,
+                              ),
+                            ),
+                            const Spacer(),
+                            if (_quickSelectStationId != null &&
+                                !_isQuickModeExpanded)
+                              Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange[300],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  '已啟用',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.orange[900],
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      // 站點選擇
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: widget.stations.map((station) {
-                          final isSelected =
-                              _quickSelectStationId == station.id;
-                          return ChoiceChip(
-                            label: Text(station.name),
-                            selected: isSelected,
-                            onSelected: (selected) {
-                              setState(() {
-                                _quickSelectStationId = selected
-                                    ? station.id
-                                    : null;
-                              });
-                            },
-                            selectedColor: Colors.orange[300],
-                            backgroundColor: Colors.white,
-                          );
-                        }).toList(),
-                      ),
-                      if (_quickSelectStationId != null) ...[
-                        const SizedBox(height: 8),
-                        const Divider(height: 1),
-                        const SizedBox(height: 8),
-                        // 搭乘類型選擇
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ChoiceChip(
-                                label: const Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.sync_alt, size: 16),
-                                    SizedBox(width: 4),
-                                    Text('來回'),
-                                  ],
-                                ),
-                                selected:
-                                    _quickSelectRideType == RideType.roundTrip,
-                                onSelected: (selected) {
-                                  if (selected) {
-                                    setState(() {
-                                      _quickSelectRideType = RideType.roundTrip;
-                                    });
-                                  }
-                                },
-                                selectedColor: Colors.orange[300],
-                                backgroundColor: Colors.white,
-                              ),
-                            ),
                             const SizedBox(width: 8),
-                            Expanded(
-                              child: ChoiceChip(
-                                label: const Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.logout, size: 16),
-                                    SizedBox(width: 4),
-                                    Text('離營'),
-                                  ],
-                                ),
-                                selected:
-                                    _quickSelectRideType == RideType.leaveBase,
-                                onSelected: (selected) {
-                                  if (selected) {
-                                    setState(() {
-                                      _quickSelectRideType = RideType.leaveBase;
-                                    });
-                                  }
-                                },
-                                selectedColor: Colors.orange[300],
-                                backgroundColor: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: ChoiceChip(
-                                label: const Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.login, size: 16),
-                                    SizedBox(width: 4),
-                                    Text('回營'),
-                                  ],
-                                ),
-                                selected:
-                                    _quickSelectRideType == RideType.returnBase,
-                                onSelected: (selected) {
-                                  if (selected) {
-                                    setState(() {
-                                      _quickSelectRideType =
-                                          RideType.returnBase;
-                                    });
-                                  }
-                                },
-                                selectedColor: Colors.orange[300],
-                                backgroundColor: Colors.white,
-                              ),
+                            Icon(
+                              _isQuickModeExpanded
+                                  ? Icons.expand_less
+                                  : Icons.expand_more,
+                              color: Colors.orange[700],
                             ),
                           ],
                         ),
+                      ),
+                      if (_isQuickModeExpanded) ...[
                         const SizedBox(height: 8),
-                        Text(
-                          '💡 選擇站點和類型後，點擊學員即可快速分配',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.orange[800],
-                            fontStyle: FontStyle.italic,
-                          ),
+                        Row(
+                          children: [
+                            const Spacer(),
+                            if (_quickSelectStationId != null)
+                              TextButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    _quickSelectStationId = null;
+                                  });
+                                },
+                                icon: const Icon(Icons.clear, size: 16),
+                                label: const Text('清除'),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.orange[700],
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
+                        // 站點選擇
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: widget.stations.map((station) {
+                            final isSelected =
+                                _quickSelectStationId == station.id;
+                            return ChoiceChip(
+                              label: Text(station.name),
+                              selected: isSelected,
+                              onSelected: (selected) {
+                                setState(() {
+                                  _quickSelectStationId = selected
+                                      ? station.id
+                                      : null;
+                                });
+                              },
+                              selectedColor: Colors.orange[300],
+                              backgroundColor: Colors.white,
+                            );
+                          }).toList(),
+                        ),
+                        if (_quickSelectStationId != null) ...[
+                          const SizedBox(height: 8),
+                          const Divider(height: 1),
+                          const SizedBox(height: 8),
+                          // 搭乘類型選擇
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ChoiceChip(
+                                  label: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.sync_alt, size: 16),
+                                      SizedBox(width: 4),
+                                      Text('來回'),
+                                    ],
+                                  ),
+                                  selected:
+                                      _quickSelectRideType ==
+                                      RideType.roundTrip,
+                                  onSelected: (selected) {
+                                    if (selected) {
+                                      setState(() {
+                                        _quickSelectRideType =
+                                            RideType.roundTrip;
+                                      });
+                                    }
+                                  },
+                                  selectedColor: Colors.orange[300],
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: ChoiceChip(
+                                  label: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.logout, size: 16),
+                                      SizedBox(width: 4),
+                                      Text('離營'),
+                                    ],
+                                  ),
+                                  selected:
+                                      _quickSelectRideType ==
+                                      RideType.leaveBase,
+                                  onSelected: (selected) {
+                                    if (selected) {
+                                      setState(() {
+                                        _quickSelectRideType =
+                                            RideType.leaveBase;
+                                      });
+                                    }
+                                  },
+                                  selectedColor: Colors.orange[300],
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: ChoiceChip(
+                                  label: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.login, size: 16),
+                                      SizedBox(width: 4),
+                                      Text('回營'),
+                                    ],
+                                  ),
+                                  selected:
+                                      _quickSelectRideType ==
+                                      RideType.returnBase,
+                                  onSelected: (selected) {
+                                    if (selected) {
+                                      setState(() {
+                                        _quickSelectRideType =
+                                            RideType.returnBase;
+                                      });
+                                    }
+                                  },
+                                  selectedColor: Colors.orange[300],
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '💡 選擇站點和類型後，點擊學員即可快速分配',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.orange[800],
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
                       ],
                     ],
                   ),
