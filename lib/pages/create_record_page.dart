@@ -517,34 +517,6 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                       ),
                       if (_isQuickModeExpanded) ...[
                         const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            const Spacer(),
-                            if (_quickSelectStationId != null)
-                              TextButton.icon(
-                                onPressed: () {
-                                  setState(() {
-                                    _quickSelectStationId = null;
-                                  });
-                                },
-                                icon: const Icon(Icons.clear, size: 14),
-                                label: const Text(
-                                  '清除',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.orange[700],
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 2,
-                                  ),
-                                  minimumSize: Size.zero,
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                              ),
-                          ],
-                        ),
                         // 站點選擇
                         Wrap(
                           spacing: 6,
@@ -589,10 +561,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                   children: [
                                     Icon(Icons.sync_alt, size: 14),
                                     SizedBox(width: 2),
-                                    Text(
-                                      '來回',
-                                      style: TextStyle(fontSize: 11),
-                                    ),
+                                    Text('來回', style: TextStyle(fontSize: 11)),
                                   ],
                                 ),
                                 selected:
@@ -619,10 +588,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                   children: [
                                     Icon(Icons.logout, size: 14),
                                     SizedBox(width: 2),
-                                    Text(
-                                      '離營',
-                                      style: TextStyle(fontSize: 11),
-                                    ),
+                                    Text('離營', style: TextStyle(fontSize: 11)),
                                   ],
                                 ),
                                 selected:
@@ -649,10 +615,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                   children: [
                                     Icon(Icons.login, size: 14),
                                     SizedBox(width: 2),
-                                    Text(
-                                      '回營',
-                                      style: TextStyle(fontSize: 11),
-                                    ),
+                                    Text('回營', style: TextStyle(fontSize: 11)),
                                   ],
                                 ),
                                 selected:
@@ -660,7 +623,8 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                 onSelected: (selected) {
                                   if (selected) {
                                     setState(() {
-                                      _quickSelectRideType = RideType.returnBase;
+                                      _quickSelectRideType =
+                                          RideType.returnBase;
                                     });
                                   }
                                 },
@@ -679,41 +643,6 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                       ],
                     ],
                   ),
-                ),
-                const SizedBox(height: 8),
-                // 搜尋框
-                TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: '搜尋學號...',
-                    prefixIcon: const Icon(Icons.search, size: 20),
-                    suffixIcon: _searchQuery.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear, size: 20),
-                            onPressed: () {
-                              setState(() {
-                                _searchController.clear();
-                                _searchQuery = '';
-                              });
-                            },
-                          )
-                        : null,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
-                    ),
-                    isDense: true,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
-                  },
                 ),
                 const SizedBox(height: 8),
                 // 快速過濾按鈕
@@ -930,17 +859,17 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
         : null;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 1,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         side: BorderSide(
           color: ride != null ? Colors.blue[200]! : Colors.grey[300]!,
-          width: 2,
+          width: 1.5,
         ),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         onTap: () {
           // 如果快速分配模式已啟用，直接分配
           if (_quickSelectStationId != null) {
@@ -952,29 +881,29 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
         },
         onLongPress: () => _showAssignDialog(studentNumber, ride),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(10),
           child: Row(
             children: [
               // 學號
               Container(
-                width: 60,
-                height: 60,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
                   color: ride != null ? Colors.blue : Colors.grey[300],
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
                   child: Text(
                     studentNumber,
                     style: TextStyle(
                       color: ride != null ? Colors.white : Colors.black87,
-                      fontSize: 18,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 10),
               // 站點資訊
               Expanded(
                 child: ride != null
@@ -985,20 +914,20 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                             children: [
                               Icon(
                                 Icons.location_on,
-                                size: 20,
+                                size: 16,
                                 color: Colors.blue[700],
                               ),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: 3),
                               Text(
                                 station!.name,
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 3),
                           Row(
                             children: [
                               Icon(
@@ -1007,10 +936,10 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                     : ride.rideType == RideType.leaveBase
                                     ? Icons.logout
                                     : Icons.login,
-                                size: 16,
+                                size: 14,
                                 color: Colors.grey[600],
                               ),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: 3),
                               Text(
                                 ride.rideType == RideType.roundTrip
                                     ? '來回 (\$${station.roundTripPrice})'
@@ -1018,7 +947,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                     ? '離營 (\$${station.price})'
                                     : '回營 (\$${station.price})',
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   color: Colors.grey[700],
                                 ),
                               ),
@@ -1028,7 +957,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                       )
                     : Text(
                         '尚未分配',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
               ),
               // 操作按鈕
@@ -1036,7 +965,10 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                 icon: Icon(
                   ride != null ? Icons.edit : Icons.add_circle_outline,
                   color: ride != null ? Colors.blue : Colors.green,
+                  size: 20,
                 ),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
                 onPressed: () => _showAssignDialog(studentNumber, ride),
               ),
             ],
