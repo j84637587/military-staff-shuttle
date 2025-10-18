@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build and Deploy
 
 on:
   push:
@@ -6,7 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build-web:
+    name: Build and Deploy Web
     runs-on: ubuntu-latest
     
     steps:
@@ -35,3 +36,25 @@ jobs:
         user_name: 'github-ci[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
         commit_message: 'Publish to gh-pages'
+
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: cedvdb/action-flutter-build-android@v1
+      with:
+        keystore-base64: ${{ secrets.ANDROID_RELEASE_KEY }}
+        keystore-password: "${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}"
+        # optionals
+        build-cmd: flutter build apk --release --flavor dev
+        working-directory: ./
+
+    - name: Archive APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-apk
+        # Try running the build locally with the build command to be sure of this path
+        path: build/app/outputs/flutter-apk/app-dev-release.apk
