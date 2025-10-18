@@ -12,7 +12,8 @@ class AppProvider extends ChangeNotifier {
   List<ShuttleRecord> _records = [];
   bool _isLoading = false;
 
-  List<Station> get stations => _stations;
+  List<Station> get stations => _stations.where((s) => !s.isDeleted).toList();
+  List<Station> get allStations => _stations; // 包含已刪除的站點
   List<ShuttleRecord> get records => _records;
   bool get isLoading => _isLoading;
 
@@ -47,11 +48,19 @@ class AppProvider extends ChangeNotifier {
     }
   }
 
-  /// 刪除站點
+  /// 刪除站點（軟刪除）
   Future<void> deleteStation(String id) async {
-    _stations.removeWhere((s) => s.id == id);
-    await _storageService.saveStations(_stations);
-    notifyListeners();
+    final index = _stations.indexWhere((s) => s.id == id);
+    if (index != -1) {
+      _stations[index] = _stations[index].copyWith(deletedAt: DateTime.now());
+      await _storageService.saveStations(_stations);
+      notifyListeners();
+    }
+  }
+
+  /// 根據 ID 獲取站點（包括已刪除的）
+  Station getStationById(String id) {
+    return _stations.firstWhere((s) => s.id == id);
   }
 
   // ========== 專車記錄管理 ==========
@@ -101,10 +110,7 @@ class AppProvider extends ChangeNotifier {
 
     // 依站點分組統計
     for (final ride in record.rides) {
-      final station = _stations.firstWhere(
-        (s) => s.id == ride.stationId,
-        orElse: () => Station(id: ride.stationId, name: '未知站點', price: 0),
-      );
+      final station = getStationById(ride.stationId);
 
       if (!stationStats.containsKey(station.id)) {
         stationStats[station.id] = {
