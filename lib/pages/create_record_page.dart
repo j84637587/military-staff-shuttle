@@ -926,7 +926,11 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                           Row(
                             children: [
                               Icon(
-                                Icons.swap_horiz,
+                                ride.rideType == RideType.roundTrip
+                                    ? Icons.sync_alt
+                                    : ride.rideType == RideType.leaveBase
+                                    ? Icons.logout
+                                    : Icons.login,
                                 size: 16,
                                 color: Colors.grey[600],
                               ),
@@ -934,7 +938,9 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                               Text(
                                 ride.rideType == RideType.roundTrip
                                     ? '來回 (\$${station.roundTripPrice})'
-                                    : '單程 (\$${station.price})',
+                                    : ride.rideType == RideType.leaveBase
+                                    ? '離營 (\$${station.price})'
+                                    : '回營 (\$${station.price})',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[700],
