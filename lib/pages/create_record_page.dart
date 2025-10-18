@@ -415,7 +415,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
         children: [
           // 統計卡片
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [Colors.blue[400]!, Colors.blue[600]!],
@@ -431,7 +431,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                     Colors.white,
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 Expanded(
                   child: _buildStatCard(
                     '未分配',
@@ -452,10 +452,10 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
               children: [
                 // 快速分配模式選擇區（可收合）
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.orange[50],
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.orange[200]!),
                   ),
                   child: Column(
@@ -472,15 +472,15 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                             Icon(
                               Icons.touch_app,
                               color: Colors.orange[700],
-                              size: 20,
+                              size: 16,
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 6),
                             Text(
-                              '快速分配模式',
+                              '快速分配',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.orange[900],
-                                fontSize: 14,
+                                fontSize: 13,
                               ),
                             ),
                             const Spacer(),
@@ -488,34 +488,35 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                 !_isQuickModeExpanded)
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
+                                  horizontal: 6,
                                   vertical: 2,
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.orange[300],
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
                                   '已啟用',
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 10,
                                     color: Colors.orange[900],
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 4),
                             Icon(
                               _isQuickModeExpanded
                                   ? Icons.expand_less
                                   : Icons.expand_more,
                               color: Colors.orange[700],
+                              size: 18,
                             ),
                           ],
                         ),
                       ),
                       if (_isQuickModeExpanded) ...[
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 6),
                         Row(
                           children: [
                             const Spacer(),
@@ -526,26 +527,36 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                     _quickSelectStationId = null;
                                   });
                                 },
-                                icon: const Icon(Icons.clear, size: 16),
-                                label: const Text('清除'),
+                                icon: const Icon(Icons.clear, size: 14),
+                                label: const Text(
+                                  '清除',
+                                  style: TextStyle(fontSize: 12),
+                                ),
                                 style: TextButton.styleFrom(
                                   foregroundColor: Colors.orange[700],
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
+                                    horizontal: 6,
+                                    vertical: 2,
                                   ),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                               ),
                           ],
                         ),
                         // 站點選擇
                         Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
+                          spacing: 6,
+                          runSpacing: 6,
                           children: widget.stations.map((station) {
                             final isSelected =
                                 _quickSelectStationId == station.id;
                             return ChoiceChip(
-                              label: Text(station.name),
+                              label: Text(
+                                station.name,
+                                style: const TextStyle(fontSize: 12),
+                              ),
                               selected: isSelected,
                               onSelected: (selected) {
                                 setState(() {
@@ -556,119 +567,129 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                               },
                               selectedColor: Colors.orange[300],
                               backgroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 0,
+                              ),
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                             );
                           }).toList(),
                         ),
                         if (_quickSelectStationId != null) ...[
-                          const SizedBox(height: 8),
-                          const Divider(height: 1),
-                          const SizedBox(height: 8),
-                          // 搭乘類型選擇
-                          Row(
+                          const SizedBox(height: 6),
+                          // 搭乘類型選擇（與站點對齊）
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 6,
                             children: [
-                              Expanded(
-                                child: ChoiceChip(
-                                  label: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.sync_alt, size: 16),
-                                      SizedBox(width: 4),
-                                      Text('來回'),
-                                    ],
-                                  ),
-                                  selected:
-                                      _quickSelectRideType ==
-                                      RideType.roundTrip,
-                                  onSelected: (selected) {
-                                    if (selected) {
-                                      setState(() {
-                                        _quickSelectRideType =
-                                            RideType.roundTrip;
-                                      });
-                                    }
-                                  },
-                                  selectedColor: Colors.orange[300],
-                                  backgroundColor: Colors.white,
+                              ChoiceChip(
+                                label: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.sync_alt, size: 14),
+                                    SizedBox(width: 2),
+                                    Text(
+                                      '來回',
+                                      style: TextStyle(fontSize: 11),
+                                    ),
+                                  ],
                                 ),
+                                selected:
+                                    _quickSelectRideType == RideType.roundTrip,
+                                onSelected: (selected) {
+                                  if (selected) {
+                                    setState(() {
+                                      _quickSelectRideType = RideType.roundTrip;
+                                    });
+                                  }
+                                },
+                                selectedColor: Colors.orange[300],
+                                backgroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 0,
+                                ),
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
                               ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: ChoiceChip(
-                                  label: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.logout, size: 16),
-                                      SizedBox(width: 4),
-                                      Text('離營'),
-                                    ],
-                                  ),
-                                  selected:
-                                      _quickSelectRideType ==
-                                      RideType.leaveBase,
-                                  onSelected: (selected) {
-                                    if (selected) {
-                                      setState(() {
-                                        _quickSelectRideType =
-                                            RideType.leaveBase;
-                                      });
-                                    }
-                                  },
-                                  selectedColor: Colors.orange[300],
-                                  backgroundColor: Colors.white,
+                              ChoiceChip(
+                                label: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.logout, size: 14),
+                                    SizedBox(width: 2),
+                                    Text(
+                                      '離營',
+                                      style: TextStyle(fontSize: 11),
+                                    ),
+                                  ],
                                 ),
+                                selected:
+                                    _quickSelectRideType == RideType.leaveBase,
+                                onSelected: (selected) {
+                                  if (selected) {
+                                    setState(() {
+                                      _quickSelectRideType = RideType.leaveBase;
+                                    });
+                                  }
+                                },
+                                selectedColor: Colors.orange[300],
+                                backgroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 0,
+                                ),
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
                               ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: ChoiceChip(
-                                  label: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.login, size: 16),
-                                      SizedBox(width: 4),
-                                      Text('回營'),
-                                    ],
-                                  ),
-                                  selected:
-                                      _quickSelectRideType ==
-                                      RideType.returnBase,
-                                  onSelected: (selected) {
-                                    if (selected) {
-                                      setState(() {
-                                        _quickSelectRideType =
-                                            RideType.returnBase;
-                                      });
-                                    }
-                                  },
-                                  selectedColor: Colors.orange[300],
-                                  backgroundColor: Colors.white,
+                              ChoiceChip(
+                                label: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.login, size: 14),
+                                    SizedBox(width: 2),
+                                    Text(
+                                      '回營',
+                                      style: TextStyle(fontSize: 11),
+                                    ),
+                                  ],
                                 ),
+                                selected:
+                                    _quickSelectRideType == RideType.returnBase,
+                                onSelected: (selected) {
+                                  if (selected) {
+                                    setState(() {
+                                      _quickSelectRideType = RideType.returnBase;
+                                    });
+                                  }
+                                },
+                                selectedColor: Colors.orange[300],
+                                backgroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 0,
+                                ),
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
                               ),
                             ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '💡 選擇站點和類型後，點擊學員即可快速分配',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.orange[800],
-                              fontStyle: FontStyle.italic,
-                            ),
                           ),
                         ],
                       ],
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 // 搜尋框
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: '搜尋學號...',
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search, size: 20),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(Icons.clear),
+                            icon: const Icon(Icons.clear, size: 20),
                             onPressed: () {
                               setState(() {
                                 _searchController.clear();
@@ -678,10 +699,15 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                           )
                         : null,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     filled: true,
                     fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    isDense: true,
                   ),
                   onChanged: (value) {
                     setState(() {
@@ -689,7 +715,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                     });
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 // 快速過濾按鈕
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -812,29 +838,32 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
     Color color,
   ) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label, style: TextStyle(color: color, fontSize: 12)),
-              Text(
-                value,
-                style: TextStyle(
-                  color: color,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
