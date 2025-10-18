@@ -554,18 +554,42 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                 label: const Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.arrow_forward, size: 16),
+                                    Icon(Icons.logout, size: 16),
                                     SizedBox(width: 4),
-                                    Text('單程'),
+                                    Text('離營'),
                                   ],
                                 ),
                                 selected:
-                                    _quickSelectRideType == RideType.returnOnly,
+                                    _quickSelectRideType == RideType.leaveBase,
+                                onSelected: (selected) {
+                                  if (selected) {
+                                    setState(() {
+                                      _quickSelectRideType = RideType.leaveBase;
+                                    });
+                                  }
+                                },
+                                selectedColor: Colors.orange[300],
+                                backgroundColor: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: ChoiceChip(
+                                label: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.login, size: 16),
+                                    SizedBox(width: 4),
+                                    Text('回營'),
+                                  ],
+                                ),
+                                selected:
+                                    _quickSelectRideType == RideType.returnBase,
                                 onSelected: (selected) {
                                   if (selected) {
                                     setState(() {
                                       _quickSelectRideType =
-                                          RideType.returnOnly;
+                                          RideType.returnBase;
                                     });
                                   }
                                 },
@@ -1004,15 +1028,26 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                   secondary: const Icon(Icons.sync_alt),
                 ),
                 RadioListTile<RideType>(
-                  value: RideType.returnOnly,
+                  value: RideType.leaveBase,
                   groupValue: selectedRideType,
                   onChanged: (value) {
                     setDialogState(() {
                       selectedRideType = value!;
                     });
                   },
-                  title: const Text('單程'),
-                  secondary: const Icon(Icons.arrow_forward),
+                  title: const Text('離營'),
+                  secondary: const Icon(Icons.logout),
+                ),
+                RadioListTile<RideType>(
+                  value: RideType.returnBase,
+                  groupValue: selectedRideType,
+                  onChanged: (value) {
+                    setDialogState(() {
+                      selectedRideType = value!;
+                    });
+                  },
+                  title: const Text('回營'),
+                  secondary: const Icon(Icons.login),
                 ),
               ],
             ),
@@ -1179,14 +1214,24 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                   title: const Text('來回'),
                 ),
                 RadioListTile<RideType>(
-                  value: RideType.returnOnly,
+                  value: RideType.leaveBase,
                   groupValue: selectedRideType,
                   onChanged: (value) {
                     setDialogState(() {
                       selectedRideType = value!;
                     });
                   },
-                  title: const Text('單程'),
+                  title: const Text('離營'),
+                ),
+                RadioListTile<RideType>(
+                  value: RideType.returnBase,
+                  groupValue: selectedRideType,
+                  onChanged: (value) {
+                    setDialogState(() {
+                      selectedRideType = value!;
+                    });
+                  },
+                  title: const Text('回營'),
                 ),
               ],
             ),

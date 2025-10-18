@@ -1,8 +1,8 @@
 /// 學員搭乘類型
 enum RideType {
   roundTrip, // 來回
-  outboundOnly, // 只搭去程
-  returnOnly, // 只搭返程
+  leaveBase, // 離營（去程）
+  returnBase, // 回營（返程）
 }
 
 /// 學員搭乘資料

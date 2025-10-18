@@ -110,15 +110,18 @@ class AppProvider extends ChangeNotifier {
         stationStats[station.id] = {
           'station': station,
           'roundTrip': <String>[],
-          'oneWay': <String>[],
+          'leaveBase': <String>[],
+          'returnBase': <String>[],
         };
       }
 
       final stats = stationStats[station.id]!;
       if (ride.rideType == RideType.roundTrip) {
         (stats['roundTrip'] as List<String>).add(ride.studentNumber);
+      } else if (ride.rideType == RideType.leaveBase) {
+        (stats['leaveBase'] as List<String>).add(ride.studentNumber);
       } else {
-        (stats['oneWay'] as List<String>).add(ride.studentNumber);
+        (stats['returnBase'] as List<String>).add(ride.studentNumber);
       }
     }
 
@@ -127,22 +130,27 @@ class AppProvider extends ChangeNotifier {
     for (final entry in stationStats.entries) {
       final station = entry.value['station'] as Station;
       final roundTripStudents = entry.value['roundTrip'] as List<String>;
-      final oneWayStudents = entry.value['oneWay'] as List<String>;
+      final leaveBaseStudents = entry.value['leaveBase'] as List<String>;
+      final returnBaseStudents = entry.value['returnBase'] as List<String>;
 
       final roundTripCount = roundTripStudents.length;
-      final oneWayCount = oneWayStudents.length;
-      final totalCount = roundTripCount + oneWayCount;
+      final leaveBaseCount = leaveBaseStudents.length;
+      final returnBaseCount = returnBaseStudents.length;
+      final totalCount = roundTripCount + leaveBaseCount + returnBaseCount;
 
       final cost =
           (roundTripCount * station.roundTripPrice) +
-          (oneWayCount * station.price);
+          (leaveBaseCount * station.price) +
+          (returnBaseCount * station.price);
 
       stationResults.add({
         'station': station,
         'roundTripStudents': roundTripStudents,
-        'oneWayStudents': oneWayStudents,
+        'leaveBaseStudents': leaveBaseStudents,
+        'returnBaseStudents': returnBaseStudents,
         'roundTripCount': roundTripCount,
-        'oneWayCount': oneWayCount,
+        'leaveBaseCount': leaveBaseCount,
+        'returnBaseCount': returnBaseCount,
         'totalCount': totalCount,
         'cost': cost,
       });

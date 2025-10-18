@@ -133,7 +133,9 @@ class RecordDetailPage extends StatelessWidget {
   Widget _buildStationCard(Map<String, dynamic> stationStat) {
     final station = stationStat['station'] as Station;
     final roundTripStudents = stationStat['roundTripStudents'] as List<String>;
-    final oneWayStudents = stationStat['oneWayStudents'] as List<String>;
+    final leaveBaseStudents = stationStat['leaveBaseStudents'] as List<String>;
+    final returnBaseStudents =
+        stationStat['returnBaseStudents'] as List<String>;
     final totalCount = stationStat['totalCount'] as int;
     final cost = stationStat['cost'] as int;
 
@@ -156,12 +158,21 @@ class RecordDetailPage extends StatelessWidget {
               const SizedBox(height: 8),
             ],
 
-            if (oneWayStudents.isNotEmpty) ...[
+            if (leaveBaseStudents.isNotEmpty) ...[
               Text(
-                '${station.name}-單程返營(\$${station.price})：',
+                '離營(\$${station.price})：',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              Text(oneWayStudents.join(', ')),
+              Text(leaveBaseStudents.join(', ')),
+              const SizedBox(height: 8),
+            ],
+
+            if (returnBaseStudents.isNotEmpty) ...[
+              Text(
+                '回營(\$${station.price})：',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(returnBaseStudents.join(', ')),
               const SizedBox(height: 8),
             ],
 
@@ -224,7 +235,8 @@ class RecordDetailPage extends StatelessWidget {
     for (final s in stationStats) {
       final station = s['station'] as Station;
       final roundTripStudents = s['roundTripStudents'] as List<String>;
-      final oneWayStudents = s['oneWayStudents'] as List<String>;
+      final leaveBaseStudents = s['leaveBaseStudents'] as List<String>;
+      final returnBaseStudents = s['returnBaseStudents'] as List<String>;
 
       if (roundTripStudents.isNotEmpty) {
         buffer.writeln(
@@ -232,9 +244,15 @@ class RecordDetailPage extends StatelessWidget {
         );
       }
 
-      if (oneWayStudents.isNotEmpty) {
+      if (leaveBaseStudents.isNotEmpty) {
         buffer.writeln(
-          '${station.name}-單程返營(\$${station.price}) : ${oneWayStudents.join(', ')}',
+          '離營(\$${station.price}) : ${leaveBaseStudents.join(', ')}',
+        );
+      }
+
+      if (returnBaseStudents.isNotEmpty) {
+        buffer.writeln(
+          '回營(\$${station.price}) : ${returnBaseStudents.join(', ')}',
         );
       }
 
