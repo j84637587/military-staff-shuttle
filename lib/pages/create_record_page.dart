@@ -404,7 +404,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
   List<String> get _filteredStudents {
     List<String> students = List.generate(
       widget.totalStudents,
-      (index) => index.toString().padLeft(3, '0'),
+      (index) => (index + 1).toString().padLeft(3, '0'),
     );
 
     // 搜尋過濾
@@ -1157,7 +1157,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                         controller: startController,
                         decoration: const InputDecoration(
                           labelText: '起始',
-                          hintText: '000',
+                          hintText: '001',
                           border: OutlineInputBorder(),
                         ),
                         keyboardType: TextInputType.number,
@@ -1272,8 +1272,9 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                 if (start == null ||
                     end == null ||
                     selectedStationId == null ||
+                    start < 1 ||
                     start > end ||
-                    end >= widget.totalStudents) {
+                    end > widget.totalStudents) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('請輸入有效的學號範圍和站點')),
                   );
