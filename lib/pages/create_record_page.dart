@@ -707,13 +707,19 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                       ],
                     ),
                   )
-                : ListView.builder(
+                : GridView.builder(
                     padding: const EdgeInsets.all(8),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5, // 每行5個
+                      childAspectRatio: 1, // 正方形
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                    ),
                     itemCount: _filteredStudents.length,
                     itemBuilder: (context, index) {
                       final studentNumber = _filteredStudents[index];
                       final ride = _rides[studentNumber];
-                      return _buildStudentCard(studentNumber, ride);
+                      return _buildStudentGridItem(studentNumber, ride);
                     },
                   ),
           ),
@@ -831,124 +837,71 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
     );
   }
 
-  Widget _buildStudentCard(String studentNumber, StudentRide? ride) {
+  Widget _buildStudentGridItem(String studentNumber, StudentRide? ride) {
     final station = ride != null ? widget.getStationById(ride.stationId) : null;
+    final isAssigned = ride != null;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(
-          color: ride != null ? Colors.blue[200]! : Colors.grey[300]!,
-          width: 1.5,
+    return InkWell(
+      onTap: () {
+        // 如果快速分配模式已啟用，直接分配
+        if (_quickSelectStationId != null) {
+          _quickAssignStudent(studentNumber);
+        } else {
+          // 否則打開詳細對話框
+          _showAssignDialog(studentNumber, ride);
+        }
+      },
+      onLongPress: () => _showAssignDialog(studentNumber, ride),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isAssigned ? Colors.blue[400] : Colors.grey[300],
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 2,
+              offset: const Offset(0, 1),
+            ),
+          ],
         ),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          // 如果快速分配模式已啟用，直接分配
-          if (_quickSelectStationId != null) {
-            _quickAssignStudent(studentNumber);
-          } else {
-            // 否則打開詳細對話框
-            _showAssignDialog(studentNumber, ride);
-          }
-        },
-        onLongPress: () => _showAssignDialog(studentNumber, ride),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            children: [
-              // 學號
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: ride != null ? Colors.blue : Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Text(
-                    studentNumber,
-                    style: TextStyle(
-                      color: ride != null ? Colors.white : Colors.black87,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // 學號
+            Text(
+              studentNumber,
+              style: TextStyle(
+                color: isAssigned ? Colors.white : Colors.black87,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(width: 10),
-              // 站點資訊
-              Expanded(
-                child: ride != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_on,
-                                size: 16,
-                                color: Colors.blue[700],
-                              ),
-                              const SizedBox(width: 3),
-                              Text(
-                                station!.name,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 3),
-                          Row(
-                            children: [
-                              Icon(
-                                ride.rideType == RideType.roundTrip
-                                    ? Icons.sync_alt
-                                    : ride.rideType == RideType.leaveBase
-                                    ? Icons.logout
-                                    : Icons.login,
-                                size: 14,
-                                color: Colors.grey[600],
-                              ),
-                              const SizedBox(width: 3),
-                              Text(
-                                ride.rideType == RideType.roundTrip
-                                    ? '來回 (\$${station.roundTripPrice})'
-                                    : ride.rideType == RideType.leaveBase
-                                    ? '離營 (\$${station.price})'
-                                    : '回營 (\$${station.price})',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    : Text(
-                        '尚未分配',
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-              ),
-              // 操作按鈕
-              IconButton(
-                icon: Icon(
-                  ride != null ? Icons.edit : Icons.add_circle_outline,
-                  color: ride != null ? Colors.blue : Colors.green,
-                  size: 20,
+            ),
+            if (isAssigned && station != null) ...[
+              const SizedBox(height: 4),
+              // 站點名稱
+              Text(
+                station.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
                 ),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () => _showAssignDialog(studentNumber, ride),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 2),
+              // 搭乘類型圖標
+              Icon(
+                ride.rideType == RideType.roundTrip
+                    ? Icons.sync_alt
+                    : ride.rideType == RideType.leaveBase
+                    ? Icons.logout
+                    : Icons.login,
+                size: 14,
+                color: Colors.white,
               ),
             ],
-          ),
+          ],
         ),
       ),
     );
