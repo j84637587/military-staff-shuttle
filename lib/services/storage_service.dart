@@ -55,6 +55,13 @@ class StorageService {
     return [
       Station(id: '1', name: '新竹', price: 400),
       Station(id: '2', name: '苗栗', price: 380),
+      Station(id: '3', name: '台中', price: 300),
+      Station(id: '4', name: '彰化', price: 280),
+      Station(id: '5', name: '南投', price: 280),
+      Station(id: '6', name: '雲林', price: 250),
+      Station(id: '7', name: '嘉義', price: 200),
+      Station(id: '8', name: '台南', price: 320),
+      Station(id: '9', name: '高屏', price: 380),
     ];
   }
 }
