@@ -920,7 +920,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 200),
+                  constraints: const BoxConstraints(maxHeight: 220),
                   child: SingleChildScrollView(
                     child: RadioGroup<String>(
                       groupValue: selectedStationId,
@@ -931,7 +931,9 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                           });
                         }
                       },
-                      child: Column(
+                      child: Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
                         children: widget.stations.map((station) {
                           final isSelected = selectedStationId == station.id;
                           return InkWell(
@@ -941,11 +943,8 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                               });
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 6,
-                              ),
-                              margin: const EdgeInsets.only(bottom: 4),
+                              width: 95, // 固定寬度，確保每行約3個
+                              height: 65, // 固定高度
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? Colors.blue[50]
@@ -958,35 +957,24 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                                   width: isSelected ? 2 : 1,
                                 ),
                               ),
-                              child: Row(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Radio<String>(
                                     value: station.id,
                                     visualDensity: VisualDensity.compact,
                                   ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          station.name,
-                                          style: TextStyle(
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        Text(
-                                          '單程: \$${station.price} / 來回: \$${station.roundTripPrice}',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                      ],
+                                  Text(
+                                    station.name,
+                                    style: TextStyle(
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      fontSize: 13,
                                     ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
@@ -997,6 +985,8 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 12),
+                const Divider(height: 1, thickness: 1),
                 const SizedBox(height: 12),
                 RadioGroup<RideType>(
                   groupValue: selectedRideType,
