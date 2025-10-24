@@ -709,12 +709,13 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                   )
                 : GridView.builder(
                     padding: const EdgeInsets.all(8),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5, // 每行5個
-                      childAspectRatio: 1, // 正方形
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5, // 每行5個
+                          childAspectRatio: 1, // 正方形
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                        ),
                     itemCount: _filteredStudents.length,
                     itemBuilder: (context, index) {
                       final studentNumber = _filteredStudents[index];
@@ -881,10 +882,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
               // 站點名稱
               Text(
                 station.name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                ),
+                style: const TextStyle(color: Colors.white, fontSize: 11),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -925,46 +923,86 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                   '選擇站點',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                const SizedBox(height: 12),
-                RadioGroup<String>(
-                  groupValue: selectedStationId,
-                  onChanged: (value) {
-                    if (value != null) {
-                      setDialogState(() {
-                        selectedStationId = value;
-                      });
-                    }
-                  },
-                  child: Column(
-                    children: widget.stations.map((station) {
-                      final isSelected = selectedStationId == station.id;
-                      return Card(
-                        color: isSelected ? Colors.blue[50] : null,
-                        child: ListTile(
-                          leading: Radio<String>(value: station.id),
-                          title: Text(
-                            station.name,
-                            style: TextStyle(
-                              fontWeight: isSelected
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
+                const SizedBox(height: 8),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 200),
+                  child: SingleChildScrollView(
+                    child: RadioGroup<String>(
+                      groupValue: selectedStationId,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setDialogState(() {
+                            selectedStationId = value;
+                          });
+                        }
+                      },
+                      child: Column(
+                        children: widget.stations.map((station) {
+                          final isSelected = selectedStationId == station.id;
+                          return InkWell(
+                            onTap: () {
+                              setDialogState(() {
+                                selectedStationId = station.id;
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 6,
+                              ),
+                              margin: const EdgeInsets.only(bottom: 4),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? Colors.blue[50]
+                                    : Colors.grey[50],
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? Colors.blue
+                                      : Colors.grey[300]!,
+                                  width: isSelected ? 2 : 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Radio<String>(
+                                    value: station.id,
+                                    visualDensity: VisualDensity.compact,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          station.name,
+                                          style: TextStyle(
+                                            fontWeight: isSelected
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        Text(
+                                          '單程: \$${station.price} / 來回: \$${station.roundTripPrice}',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          subtitle: Text(
-                            '單程: \$${station.price} / 來回: \$${station.roundTripPrice}',
-                          ),
-                          selected: isSelected,
-                          onTap: () {
-                            setDialogState(() {
-                              selectedStationId = station.id;
-                            });
-                          },
-                        ),
-                      );
-                    }).toList(),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 const Text(
                   '搭乘類型',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -979,37 +1017,126 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                       });
                     }
                   },
-                  child: Column(
+                  child: Row(
                     children: [
-                      ListTile(
-                        leading: Radio<RideType>(value: RideType.roundTrip),
-                        title: const Text('來回'),
-                        trailing: const Icon(Icons.sync_alt),
-                        onTap: () {
-                          setDialogState(() {
-                            selectedRideType = RideType.roundTrip;
-                          });
-                        },
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            setDialogState(() {
+                              selectedRideType = RideType.roundTrip;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            decoration: BoxDecoration(
+                              color: selectedRideType == RideType.roundTrip
+                                  ? Colors.blue[50]
+                                  : Colors.grey[50],
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: selectedRideType == RideType.roundTrip
+                                    ? Colors.blue
+                                    : Colors.grey[300]!,
+                                width: selectedRideType == RideType.roundTrip
+                                    ? 2
+                                    : 1,
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Radio<RideType>(
+                                  value: RideType.roundTrip,
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                const Icon(Icons.sync_alt, size: 18),
+                                const Text(
+                                  '來回',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      ListTile(
-                        leading: Radio<RideType>(value: RideType.leaveBase),
-                        title: const Text('離營'),
-                        trailing: const Icon(Icons.logout),
-                        onTap: () {
-                          setDialogState(() {
-                            selectedRideType = RideType.leaveBase;
-                          });
-                        },
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            setDialogState(() {
+                              selectedRideType = RideType.leaveBase;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            decoration: BoxDecoration(
+                              color: selectedRideType == RideType.leaveBase
+                                  ? Colors.blue[50]
+                                  : Colors.grey[50],
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: selectedRideType == RideType.leaveBase
+                                    ? Colors.blue
+                                    : Colors.grey[300]!,
+                                width: selectedRideType == RideType.leaveBase
+                                    ? 2
+                                    : 1,
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Radio<RideType>(
+                                  value: RideType.leaveBase,
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                const Icon(Icons.logout, size: 18),
+                                const Text(
+                                  '離營',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      ListTile(
-                        leading: Radio<RideType>(value: RideType.returnBase),
-                        title: const Text('回營'),
-                        trailing: const Icon(Icons.login),
-                        onTap: () {
-                          setDialogState(() {
-                            selectedRideType = RideType.returnBase;
-                          });
-                        },
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            setDialogState(() {
+                              selectedRideType = RideType.returnBase;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            decoration: BoxDecoration(
+                              color: selectedRideType == RideType.returnBase
+                                  ? Colors.blue[50]
+                                  : Colors.grey[50],
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: selectedRideType == RideType.returnBase
+                                    ? Colors.blue
+                                    : Colors.grey[300]!,
+                                width: selectedRideType == RideType.returnBase
+                                    ? 2
+                                    : 1,
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Radio<RideType>(
+                                  value: RideType.returnBase,
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                const Icon(Icons.login, size: 18),
+                                const Text(
+                                  '回營',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
