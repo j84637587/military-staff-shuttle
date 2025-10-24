@@ -919,11 +919,6 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '選擇站點',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const SizedBox(height: 8),
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 200),
                   child: SingleChildScrollView(
@@ -1003,11 +998,6 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  '搭乘類型',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const SizedBox(height: 8),
                 RadioGroup<RideType>(
                   groupValue: selectedRideType,
                   onChanged: (value) {
